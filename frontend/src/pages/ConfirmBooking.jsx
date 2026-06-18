@@ -1,9 +1,8 @@
 import { useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import PremiumButton from '../components/PremiumButton'
+import { API_URL } from '../config/api'
 import { tables, timeSlots } from '../data/siteData'
-
-const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api'
 
 function ConfirmBooking() {
   const navigate = useNavigate()
@@ -32,7 +31,7 @@ function ConfirmBooking() {
     async function loadBookings() {
       try {
         const params = new URLSearchParams({ date, timeSlot })
-        const response = await fetch(`${apiUrl}/bookings?${params.toString()}`)
+        const response = await fetch(`${API_URL}/bookings?${params.toString()}`)
         const data = await response.json()
 
         if (!response.ok) {
@@ -54,7 +53,7 @@ function ConfirmBooking() {
     setLoading(true)
 
     try {
-      const response = await fetch(`${apiUrl}/bookings`, {
+      const response = await fetch(`${API_URL}/bookings`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${token}`,

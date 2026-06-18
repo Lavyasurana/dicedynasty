@@ -1,10 +1,9 @@
 import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { CalendarDays, Mail, Phone, Table2, UserRound } from 'lucide-react'
+import { API_URL } from '../config/api'
 import { useAuth } from '../context/AuthContext'
 import { timeSlots } from '../data/siteData'
-
-const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api'
 
 function Profile() {
   const { token, user: authUser } = useAuth()
@@ -28,8 +27,8 @@ function Profile() {
       try {
         const headers = { Authorization: `Bearer ${token}` }
         const [meResponse, bookingsResponse] = await Promise.all([
-          fetch(`${apiUrl}/auth/me`, { headers }),
-          fetch(`${apiUrl}/bookings/mine`, { headers }),
+          fetch(`${API_URL}/auth/me`, { headers }),
+          fetch(`${API_URL}/bookings/mine`, { headers }),
         ])
         const meData = await meResponse.json()
         const bookingsData = await bookingsResponse.json()

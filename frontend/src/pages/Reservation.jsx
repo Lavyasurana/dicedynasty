@@ -1,10 +1,9 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { API_URL } from '../config/api'
 import { useAuth } from '../context/AuthContext'
 import { useToast } from '../context/ToastContext'
 import { tables, timeSlots } from '../data/siteData'
-
-const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api'
 
 function getToday() {
   return new Date().toISOString().split('T')[0]
@@ -32,7 +31,7 @@ function Reservation() {
           date: selectedDate,
           timeSlot: selectedTime,
         })
-        const response = await fetch(`${apiUrl}/bookings?${params.toString()}`, {
+        const response = await fetch(`${API_URL}/bookings?${params.toString()}`, {
           signal: controller.signal,
         })
         const data = await response.json()

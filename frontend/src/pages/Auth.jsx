@@ -2,9 +2,8 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { LockKeyhole, Mail, Phone, UserRound } from 'lucide-react'
 import PremiumButton from '../components/PremiumButton'
+import { API_URL } from '../config/api'
 import { useAuth } from '../context/AuthContext'
-
-const apiUrl = import.meta.env.VITE_API_URL || 'http://127.0.0.1:5000/api'
 
 function Auth() {
   const { login } = useAuth()
@@ -39,7 +38,7 @@ function Auth() {
       : { emailId: form.emailId, password: form.password }
 
     try {
-      const response = await fetch(`${apiUrl}/auth/${mode}`, {
+      const response = await fetch(`${API_URL}/auth/${mode}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
