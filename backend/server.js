@@ -11,14 +11,21 @@ dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 5000
-const allowedOrigins = [process.env.CLIENT_URL, 'http://127.0.0.1:5173', 'http://127.0.0.1:5174'].filter(Boolean)
+const deployedClientUrl = 'https://deal-dine.vercel.app'
+const configuredClientUrls = [process.env.CLIENT_URL, process.env.CLIENT_URLS]
+  .flatMap((value) => value?.split(',') || [])
+  .map((origin) => origin.trim().replace(/\/$/, ''))
+  .filter(Boolean)
+const allowedOrigins = new Set([deployedClientUrl, ...configuredClientUrls])
 const localDevOriginPattern = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/
 
 app.use(helmet())
 app.use(
   cors({
     origin(origin, callback) {
-      if (!origin || allowedOrigins.includes(origin) || localDevOriginPattern.test(origin)) {
+      const normalizedOrigin = origin?.replace(/\/$/, '')
+
+      if (!origin || allowedOrigins.has(normalizedOrigin) || localDevOriginPattern.test(origin)) {
         return callback(null, true)
       }
 
