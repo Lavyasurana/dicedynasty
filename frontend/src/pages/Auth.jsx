@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { LockKeyhole, Mail, Phone, UserRound } from 'lucide-react'
 import PremiumButton from '../components/PremiumButton'
 import { API_URL } from '../config/api'
@@ -14,6 +14,7 @@ function Auth() {
     emailId: '',
     password: '',
     phone_no: '',
+    acceptsTerms: false,
   })
   const [message, setMessage] = useState('')
   const [error, setError] = useState('')
@@ -31,6 +32,12 @@ function Auth() {
     event.preventDefault()
     setError('')
     setMessage('')
+
+    if (isRegister && !form.acceptsTerms) {
+      setError('Please accept the Terms & Conditions to create an account.')
+      return
+    }
+
     setLoading(true)
 
     const payload = isRegister
@@ -132,10 +139,30 @@ function Auth() {
               value={form.password}
             />
 
+            {isRegister && (
+              <label className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/20 p-4 text-sm leading-6 text-stone-300">
+                <input
+                  checked={form.acceptsTerms}
+                  className="mt-1 size-4 shrink-0 accent-[#78d6ce]"
+                  name="acceptsTerms"
+                  type="checkbox"
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, acceptsTerms: event.target.checked }))
+                  }
+                />
+                <span>
+                  I agree to the{' '}
+                  <Link className="font-bold text-amber-200 underline underline-offset-4 hover:text-amber-100" to="/terms-and-conditions">
+                    Terms &amp; Conditions
+                  </Link>.
+                </span>
+              </label>
+            )}
+
             {error && <p className="rounded-2xl bg-red-500/15 p-4 text-sm text-red-200">{error}</p>}
             {message && <p className="rounded-2xl bg-emerald-500/15 p-4 text-sm text-emerald-200">{message}</p>}
 
-            <PremiumButton className="w-full" disabled={loading} type="submit">
+            <PremiumButton className="w-full" disabled={loading || (isRegister && !form.acceptsTerms)} type="submit">
               {loading ? 'Please wait...' : isRegister ? 'Create Account' : 'Login'}
             </PremiumButton>
           </form>

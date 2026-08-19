@@ -23,10 +23,14 @@ function isStrongPassword(password) {
 
 export async function register(req, res) {
   try {
-    const { name, emailId, password, phone_no } = req.body
+    const { name, emailId, password, phone_no, acceptsTerms } = req.body
 
     if (!name || !emailId || !password || !phone_no) {
       return res.status(400).json({ message: 'All fields are required' })
+    }
+
+    if (acceptsTerms !== true) {
+      return res.status(400).json({ message: 'You must accept the Terms & Conditions to create an account' })
     }
 
     if (!isStrongPassword(password)) {
@@ -41,7 +45,7 @@ export async function register(req, res) {
       return res.status(409).json({ message: 'An account with this email already exists' })
     }
 
-    const user = await User.create({ name, emailId, password, phone_no })
+    const user = await User.create({ name, emailId, password, phone_no, termsAcceptedAt: new Date() })
     const token = createToken(user._id)
 
     return res.status(201).json({ token, user: sanitizeUser(user) })

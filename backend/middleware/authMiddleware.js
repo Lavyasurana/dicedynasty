@@ -23,3 +23,10 @@ export async function protect(req, res, next) {
     return res.status(401).json({ message: 'Invalid or expired token' })
   }
 }
+
+export function requireOwner(req, res, next) {
+  const ownerEmail = process.env.ADMIN_EMAIL?.trim().toLowerCase()
+  if (!ownerEmail) return res.status(503).json({ message: 'Owner access is not configured' })
+  if (req.user.emailId !== ownerEmail) return res.status(403).json({ message: 'Owner access is required' })
+  return next()
+}

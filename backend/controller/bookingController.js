@@ -56,3 +56,22 @@ export async function getMyBookings(req, res) {
     return res.status(500).json({ message: 'Could not fetch your bookings' })
   }
 }
+
+export async function getOwnerBookings(req, res) {
+  try {
+    const bookings = await Booking.find().sort({ date: 1, timeSlot: 1, tableNumber: 1 }).select('date timeSlot tableNumber emailId createdAt').lean()
+    return res.json({ bookings })
+  } catch {
+    return res.status(500).json({ message: 'Could not fetch bookings' })
+  }
+}
+
+export async function getOwnerLedger(req, res) {
+  try {
+    const bookings = await Booking.find().sort({ createdAt: -1 }).select('date timeSlot tableNumber emailId createdAt').lean()
+    const entries = bookings.map((booking) => ({ id: booking._id, occurredAt: booking.createdAt, type: 'Booking created', guestEmail: booking.emailId, detail: `Table ${booking.tableNumber} · ${booking.date} at ${booking.timeSlot}` }))
+    return res.json({ entries })
+  } catch {
+    return res.status(500).json({ message: 'Could not fetch ledger' })
+  }
+}

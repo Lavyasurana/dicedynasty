@@ -10,19 +10,20 @@ function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false)
 
   const linkClass = ({ isActive }) =>
-    `block rounded-full px-5 py-2 text-sm font-semibold transition backdrop-blur-xl ${
+    `block border-b-2 px-1 py-3 text-xs font-black uppercase tracking-[0.16em] transition ${
       isActive
-        ? 'bg-[#00665E] text-white shadow-lg shadow-[#00665E]/25'
-        : 'bg-slate-900/45 text-slate-300 hover:bg-slate-900/65 hover:text-white'
+        ? 'border-[#78d6ce] text-white'
+        : 'border-transparent text-slate-400 hover:border-slate-500 hover:text-white'
     }`
 
   const mobileLinkClass = ({ isActive }) =>
-    `block rounded-2xl px-4 py-3 text-sm font-semibold transition ${
-      isActive ? 'bg-[#00665E] text-white' : 'text-slate-200 hover:bg-white/10 hover:text-white'
+    `block border-l-2 px-4 py-3 text-sm font-black uppercase tracking-[0.12em] transition ${
+      isActive ? 'border-[#78d6ce] bg-white/10 text-white' : 'border-transparent text-slate-300 hover:border-slate-500 hover:bg-white/5 hover:text-white'
     }`
 
   const navLinks = [
     { to: '/', label: 'Home' },
+    { to: '/about', label: 'About Us' },
     { to: '/reservation', label: 'Reserve' },
   ]
 
@@ -37,19 +38,19 @@ function Navbar() {
   }, [location.pathname])
 
   return (
-    <nav className="fixed left-0 right-0 top-0 z-50 mx-auto w-full px-4 py-4 sm:px-8">
-      <div className="flex items-center justify-between">
+    <nav className="fixed left-0 right-0 top-0 z-50 border-b border-white/10 bg-slate-950/85 px-4 shadow-2xl shadow-black/20 backdrop-blur-xl sm:px-8">
+      <div className="relative mx-auto flex h-20 max-w-7xl items-center justify-between">
         <NavLink
-          className="group flex items-center gap-3 rounded-full border border-slate-200/15 bg-slate-900/45 px-3 py-2 text-left shadow-2xl shadow-slate-950/20 backdrop-blur-xl"
+          className="group flex items-center gap-3 text-left"
           to="/"
         >
-          <span className="grid size-11 place-items-center rounded-full bg-[#00665E] font-black text-white shadow-lg shadow-[#00665E]/30">
+          <span className="grid size-10 place-items-center bg-[#00665E] font-black text-white shadow-lg shadow-[#00665E]/30">
             DD
           </span>
-          <span className="hidden font-semibold tracking-wide text-white sm:block">Dice Dynasty</span>
+          <span className="hidden font-black uppercase tracking-[0.12em] text-white sm:block">Dice Dynasty</span>
         </NavLink>
 
-        <div className="hidden items-center gap-3 md:flex">
+        <div className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-3 md:flex">
           {navLinks.map((link) => (
             <NavLink className={linkClass} key={link.to} to={link.to}>
               {link.label}
@@ -61,7 +62,7 @@ function Navbar() {
                 Profile
               </NavLink>
               <button
-                className="rounded-full bg-slate-900/45 px-5 py-2 text-sm font-semibold text-slate-300 transition backdrop-blur-xl hover:bg-slate-900/65 hover:text-white"
+                className="border-b-2 border-transparent px-1 py-3 text-xs font-black uppercase tracking-[0.16em] text-slate-400 transition hover:border-slate-500 hover:text-white"
                 type="button"
                 onClick={handleLogout}
               >
@@ -78,7 +79,7 @@ function Navbar() {
         <button
           aria-expanded={menuOpen}
           aria-label={menuOpen ? 'Close menu' : 'Open menu'}
-          className="grid size-11 place-items-center rounded-full border border-slate-200/15 bg-slate-900/45 text-white shadow-2xl shadow-slate-950/20 backdrop-blur-xl md:hidden"
+          className="grid size-10 place-items-center border border-white/15 bg-white/5 text-white transition hover:bg-white/10 md:hidden"
           type="button"
           onClick={() => setMenuOpen((open) => !open)}
         >
@@ -87,7 +88,7 @@ function Navbar() {
       </div>
 
       {menuOpen && (
-        <div className="mt-3 rounded-[1.5rem] border border-slate-200/15 bg-slate-900/95 p-2 shadow-2xl shadow-slate-950/30 backdrop-blur-xl md:hidden">
+        <div className="border-b border-white/10 bg-slate-950/95 p-3 shadow-2xl shadow-slate-950/30 backdrop-blur-xl md:hidden">
           {navLinks.map((link) => (
             <NavLink className={mobileLinkClass} key={link.to} to={link.to}>
               {link.label}
@@ -99,7 +100,7 @@ function Navbar() {
                 Profile
               </NavLink>
               <button
-                className="block w-full rounded-2xl px-4 py-3 text-left text-sm font-semibold text-slate-200 transition hover:bg-white/10 hover:text-white"
+                className="block w-full border-l-2 border-transparent px-4 py-3 text-left text-sm font-black uppercase tracking-[0.12em] text-slate-300 transition hover:border-slate-500 hover:bg-white/5 hover:text-white"
                 type="button"
                 onClick={handleLogout}
               >

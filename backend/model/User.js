@@ -36,6 +36,10 @@ const userSchema = new mongoose.Schema(
         message: 'Please provide a valid phone number',
       },
     },
+    termsAcceptedAt: {
+      type: Date,
+      required: [true, 'Terms acceptance is required'],
+    },
     bookings: [
       {
         type: mongoose.Schema.Types.ObjectId,

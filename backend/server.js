@@ -12,12 +12,13 @@ dotenv.config()
 const app = express()
 const port = process.env.PORT || 5000
 const deployedClientUrl = 'https://deal-dine.vercel.app'
+const localCustomerUrl = 'http://localhost:5173'
+const localAdminUrl = 'http://localhost:5174'
 const configuredClientUrls = [process.env.CLIENT_URL, process.env.CLIENT_URLS]
   .flatMap((value) => value?.split(',') || [])
   .map((origin) => origin.trim().replace(/\/$/, ''))
   .filter(Boolean)
-const allowedOrigins = new Set([deployedClientUrl, ...configuredClientUrls])
-const localDevOriginPattern = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/
+const allowedOrigins = new Set([deployedClientUrl, localCustomerUrl, localAdminUrl, ...configuredClientUrls])
 
 app.use(helmet())
 app.use(
@@ -25,13 +26,16 @@ app.use(
     origin(origin, callback) {
       const normalizedOrigin = origin?.replace(/\/$/, '')
 
-      if (!origin || allowedOrigins.has(normalizedOrigin) || localDevOriginPattern.test(origin)) {
+      if (!origin || allowedOrigins.has(normalizedOrigin)) {
         return callback(null, true)
       }
 
       return callback(null, false)
     },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 204,
   }),
 )
 app.use(express.json({ limit: '10kb' }))
